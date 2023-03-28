@@ -30,15 +30,18 @@ public class MovieCatalogueResource {
     public List<CatalogueItem> getCatalogue(@PathVariable("userId") String userId) {
 
         // get all rated movie IDs
-        UserRating ratings = restTemplate.getForObject("http://localhost" +
-                ":8083/users/" + userId, UserRating.class);
+        UserRating ratings =
+                restTemplate.getForObject("http://ratings-data-service" +
+                                "/ratingsdata/users/" + userId,
+                        UserRating.class);
         return ratings.getUserRating().stream().map(rating -> {
                 // for each movie ID, call movie info service and get details
                 // creates object from json response and model
 
                 // Rest template way (deprecated)
                 Movie movie = restTemplate.getForObject
-                ("http://localhost:8082/movies/" + rating.getMovieId(), Movie.class);
+                ("http://movies-info-service/movies/" + rating.getMovieId(),
+                        Movie.class);
 
                 // Webflux (current)
                 /*
